@@ -6,9 +6,9 @@ import sqlite3
 # Create the main window
 root = tk.Tk()
 root.title("Virtual Tamagotchi")
-root.geometry("500x500")
+root.geometry("750x750")
 
-decreasedelay = 60000  # Decrease stats every x seconds
+decreasedelay = 60  # Decrease stats every x seconds
 
 # Function to get the current metrics
 def get_metrics():
