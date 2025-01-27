@@ -8,7 +8,7 @@ root = tk.Tk()
 root.title("Virtual Tamagotchi")
 root.geometry("750x750")
 
-decreasedelay = 60  # Decrease stats every x seconds
+decreasedelay = 6000  # Decrease stats every x seconds
 
 # Function to get the current metrics
 def get_metrics():
