@@ -69,6 +69,9 @@ def initialize_tamagotchi(name):
   conn = sqlite3.connect('tamagotchi.db')
   cursor = conn.cursor()
 
+  # First delete any existing records
+  cursor.execute('DELETE FROM tamagotchi_metrics')
+
   cursor.execute(''' 
   CREATE TABLE IF NOT EXISTS tamagotchi_metrics (
       id INTEGER PRIMARY KEY,
@@ -83,8 +86,8 @@ def initialize_tamagotchi(name):
 
   # Insert the name and initial values
   cursor.execute('''
-  INSERT INTO tamagotchi_metrics (name, hunger, happiness, bladder, energy, hygiene)
-  VALUES (?, ?, ?, ?, ?, ?)
+  INSERT INTO tamagotchi_metrics (id, name, hunger, happiness, bladder, energy, hygiene)
+  VALUES (1, ?, ?, ?, ?, ?, ?)
   ''', (name, hunger, happiness, bladder, energy, hygiene))
 
   conn.commit()
@@ -192,19 +195,8 @@ def decrease_metrics():
 def start_game():
     name = name_entry.get()
     if name:
-        # Check if Tamagotchi already exists
-        conn = sqlite3.connect('tamagotchi.db')
-        cursor = conn.cursor()
-        cursor.execute('SELECT id FROM tamagotchi_metrics WHERE id = 1')
-        exists = cursor.fetchone()
-        conn.close()
-
-        if exists:
-            # If Tamagotchi exists, just update the name
-            update_name(name)
-        else:
-            # If no Tamagotchi exists, initialize with default values
-            initialize_tamagotchi(name)
+        # Initialize new Tamagotchi with the name
+        initialize_tamagotchi(name)
 
         start_button.pack_forget()  # Hide the start button after starting the game
         name_entry.pack_forget()    # Hide the name entry after game starts
