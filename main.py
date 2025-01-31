@@ -190,21 +190,33 @@ def decrease_metrics():
 
 # Function to start the game with a name
 def start_game():
-  name = name_entry.get()
-  if name:
-    initialize_tamagotchi(name)
-    update_name(name)
-    start_button.pack_forget()  # Hide the start button after starting the game
-    name_entry.pack_forget()    # Hide the name entry after game starts
-    name_label.pack(pady=4)    # Show the name label
+    name = name_entry.get()
+    if name:
+        # Check if Tamagotchi already exists
+        conn = sqlite3.connect('tamagotchi.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT id FROM tamagotchi_metrics WHERE id = 1')
+        exists = cursor.fetchone()
+        conn.close()
 
-    stats_frame.pack(pady=4)
-    actions_frame.pack(pady=4)
+        if exists:
+            # If Tamagotchi exists, just update the name
+            update_name(name)
+        else:
+            # If no Tamagotchi exists, initialize with default values
+            initialize_tamagotchi(name)
 
-    update_gui()  # Initialize the GUI with the name and stats
-    decrease_metrics()  # Start the automatic stat decrease
-  else:
-    messagebox.showerror("Error", "Please enter a name!")
+        start_button.pack_forget()  # Hide the start button after starting the game
+        name_entry.pack_forget()    # Hide the name entry after game starts
+        name_label.pack(pady=4)    # Show the name label
+
+        stats_frame.pack(pady=4)
+        actions_frame.pack(pady=4)
+
+        update_gui()  # Initialize the GUI with the name and stats
+        decrease_metrics()  # Start the automatic stat decrease
+    else:
+        messagebox.showerror("Error", "Please enter a name!")
 
 # Create the name entry and start button
 name_label = tk.Label(root, text="Enter Tamagotchi Name:", font=("Arial", 14))
